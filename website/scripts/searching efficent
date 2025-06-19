@@ -1,0 +1,55 @@
+import os
+import sys
+import pickle
+import pandas as pd
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+from flask import render_template_string
+
+def load_pickle(file_path):
+    """Helper function to load a pickled file."""
+    with open(file_path, "rb") as f:
+        return pickle.load(f)
+
+def retrieve_psalms(psalms_info, csv_path="../Data/clean_psalm_verses.csv"):
+    """Retrieves Psalm text based on document and Psalm number."""
+    psalms = pd.read_csv(csv_path)
+    results = []
+    
+    for psalm in psalms_info:
+        doc, psalm_num, metric = psalm['doc'], psalm['psalm_num'], psalm['similarity']
+        verses = psalms.loc[(psalms['text'] == doc) & (psalms['psalm_num'] == psalm_num), 'verse']
+        
+        if verses.empty:
+            return render_template_string("""
+                <html><body><h1>No matching Psalm found.</h1></body></html>
+            """
+            )
+        results.append({"doc": doc, "psalm_num": psalm_num, "psalm": " ".join(verses).strip(), "similarity": metric})
+    
+    return results
+
+def search_psalms(query, data_dir="../Data/pickles"):
+    """Search for Psalms using a TF-IDF model and cosine similarity."""
+    pipeline = load_pickle(os.path.join(data_dir, "pipeline.pickle"))
+    vectorizer = load_pickle(os.path.join(data_dir, "psalms_tfidf_vectorizer.pickle"))
+    tfidf_matrix = load_pickle(os.path.join(data_dir, "psalms_tfidf_matrix.pickle"))
+    
+    clean_query = pipeline.pipeline(query)
+    query_vector = vectorizer.transform([clean_query])
+    similarities = cosine_similarity(query_vector, tfidf_matrix).flatten()
+    
+    threshold = 0.05
+    filtered_indices = np.where(similarities >= threshold)[0]
+    sorted_indices = filtered_indices[np.argsort(similarities[filtered_indices])[::-1]]
+    
+    return [{"doc": tfidf_matrix.index[i][0], "psalm_num": tfidf_matrix.index[i][1], "similarity": round(similarities[i] * 100, 2)} for i in sorted_indices]
+
+def main():
+    """Main function to run Psalm search interactively."""
+    query = input("Enter text to search the Psalms: ")
+    results = search_psalms(query)
+    print(results)  # Adjust based on how you want to display the output
+
+if __name__ == "__main__":
+    main()

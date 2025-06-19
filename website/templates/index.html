@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/search_bar.css') }}">
+    <title>Psalm Search</title>
+
+</head>
+<body class="home">
+    <center>
+        <img src="{{ url_for('static', filename='images/st_david_2.jpeg') }}" alt="">
+        <h1>Saint David's Beacon</h1>
+        <div style="width: 80%;">
+                <form action="/results" method='post' class="search-bar_container">
+                    <input type="text" name='query' placeholder="Enter Some Text">
+                    <input type="submit" value="Search">
+                </form>
+        </div>
+    </center>
+
+
+</body>
+</html>

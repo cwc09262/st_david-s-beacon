@@ -1,0 +1,360 @@
+.header {
+    position: sticky;
+    position: -webkit-sticky; /* Safari*/
+    top: 0;
+    width: 100%; /* Ensures the element is as wide as the parent container */
+    margin-left: 0; /* Optional: Remove any left margin */
+    margin-right: 0; /* Optional: Remove any right margin */
+    z-index: 1000; /* Ensures the header stays above other content */
+    background-color: white; /* Adds a background color to prevent content behind it from being visible */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for better visibility */
+}
+
+
+body {
+    font-family: 'Charis SIL';
+}
+
+@media (min-width: 768px){
+    .top {
+        float: center;
+        max-width: 1400px;
+        margin: 0 auto;
+    }        
+    .results-container{
+        width: 1000px;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+.top {
+    width: 85%;
+    padding-bottom: 10px;
+    height: 100%;
+
+}
+.tools {
+    width: 85%;
+    display: flex;
+    align-items: center; /* Vertically center elements */
+    justify-content: flex-start; /* Align items from the left */
+    height: 40px; /* Ensure consistent height */
+    gap: 10px; /* Adds spacing between elements */
+    color: green;
+    font-size: 14pt;
+}
+/* General button style */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    font-size: 16pt;
+    padding: 8px;
+    cursor: pointer;
+    text-decoration: none; /* Removes link style from the anchor */
+}
+
+.btn a {
+    color: inherit;
+}
+
+
+.graph-modal h2 {
+    color: black;
+    padding-bottom: 0px;
+    margin-bottom: 3px;
+}
+
+.graph-modal h3, h4{
+    color: green;
+    padding-top: 5px;
+    text-align: Left;
+    font-size: 18pt;
+
+}
+.visual-content h4{
+    padding-bottom: 3px;
+    text-align: left;
+    text-decoration: underline;
+    overflow-y: auto;
+    /* Ensure vertical scrolling */
+    flex-grow: 1;
+}
+
+.graph-modal p {
+    color: black;
+    text-indent: 30px;
+}
+
+
+#search-visual img {
+    width: 90%;
+    margin-left: auto;
+}
+/* Add down arrow to button */
+#drop_btn {
+    margin-right: 10px;
+    font-size: inherit;
+}
+
+/* Dropdown select style */
+.content-selector {
+    position: relative;
+    display: inline-block;
+    width: 25px;
+}
+
+.content-selector select {
+    font-family: inherit;
+    font-size: 16pt;
+    color: inherit;
+    padding: 8px 16px;
+    margin-top: 4px;
+    cursor: pointer;
+    border: none;
+    appearance: none; /* Remove default dropdown icon */
+    -webkit-appearance: none; /* For Safari */
+    -moz-appearance: none; /* For Firefox */
+}
+
+.metric-toggle {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Pushes this item to the right */
+    padding-top: 0; /* Remove top padding */
+    margin-bottom: 0; /* Remove bottom margin */
+}
+
+.metric {
+    margin-top: 5px; /* Adjust top margin as needed */
+    padding: 5px 0; /* Adjust padding */
+    text-decoration: underline;
+    text-align: right;
+}
+
+.metric h5 {
+    margin: 0;
+    padding: 0;
+}
+
+.switch-label {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adjust spacing between text and switch */
+    cursor: pointer;
+    margin-bottom: 0; /* Adjust if needed */
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+    border-radius: 50px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 50px;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
+}
+
+.switch input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(16px);
+}
+
+
+
+.main-hr{
+    padding: 0;
+    margin: 0;
+}
+
+.results-container {
+    margin-top: 0;
+    width: 75%;
+    max-width: 1200px;;
+    margin: auto;
+    padding-top: 5px;
+    margin-bottom: 10px;
+}
+
+.full {
+    transition: all 0.8s ease;
+    /* Smooth transition for hover effect */
+}
+
+.full:hover {
+    transform: scale(1.05);
+    /* Slightly scale up the container on hover */
+}
+
+/* Tile for the Psalm # */
+h2 {
+    color: red;
+    margin-bottom: 4px;
+    padding-top: 5px;
+}
+
+/* Psalm source */
+h3 {
+    margin-top: 2px;
+    margin-bottom: 4px;
+}
+
+metric h5 {
+    margin: 0;
+    padding: 0;
+}
+
+/* Psalm text */
+.psalm_text {
+    color: black;
+    margin-top: 0px;
+    text-indent: 20px;
+    padding-bottom: 0;
+    font-size: 16pt;
+}
+
+
+
+/* Modal style to display the full psalm */
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    text-align: left;
+    justify-content: center;
+    transition: all 0.8s ease;
+    /* Smooth transition when opening */
+    overflow-y: hidden;
+}
+
+
+/* Full Result container */
+.full_result {
+    font-family: 'Charis SIL';
+    margin: 0 auto;
+    margin-top: 5%;
+    background: rgb(249, 248, 247);
+    padding: 20px;
+    border-radius: 10px;
+    width: 65%;
+    max-width: 800px;
+    max-height: 80vh;
+    /* Limit height to 80% of viewport */
+    overflow: hidden;
+    /* Prevent content overflow */
+    transition: all 0.8s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.psalm-decor {
+    border: double 5px red;
+    padding: 10px;
+}
+
+.content {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 5px;
+    max-height: 60vh;
+    /* Adjust height relative to viewport */
+    overflow-y: auto;
+    /* Ensure vertical scrolling */
+    flex-grow: 1;
+    /* Allow it to take up remaining space */
+    line-height: 1.5;
+    font-size: 16px;
+}
+
+.content p {
+    font-size: 16pt;
+}
+
+.content h2 {
+    color: red;
+}
+.full_result h2,
+.full_result h3 {
+    text-align: center;
+}
+
+
+div.border {
+    border-style: double;
+    border-color: red;
+}
+
+.close {
+    color: red;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    float: right;
+}
+
+.open-modal {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+/* Style for buttons at the bottom of the page to go back to the main search page */
+button,
+a {
+    text-decoration: none;
+    /* Remove underline */
+    color: inherit;
+    /* Avoid inheriting color */
+}
+
+button {
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+

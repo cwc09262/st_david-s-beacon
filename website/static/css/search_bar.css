@@ -1,0 +1,30 @@
+.search-bar_container {
+    display: flex;
+    align-items: center;
+    border: 2px solid black;
+    border-radius: 15px;
+    padding: 5px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.search-bar_container input[type="text"] {
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    font-size: 16px;
+    padding: 5px;
+    width: 90%;
+    white-space: normal; /* Allows wrapping */
+    overflow-wrap: break-word; /* Ensures words wrap */
+    word-break: break-word; /* Breaks long words */
+}
+
+.search-bar_container input[type="submit"] {
+    background-color: transparent;
+    border: none;
+    color: green;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}

@@ -1,0 +1,51 @@
+from flask import Flask, render_template, request, redirect, url_for
+import subprocess
+import shlex
+import sys 
+import os
+from scripts.psalm_search_lite import TextPreprocessingPipeline
+from scripts.psalm_search_lite import search_psalms, retrieve_psalms, load_pickled_files
+from scripts.graphing_search import graph_pca
+
+
+# Initialize Flask app
+app = Flask(__name__)
+
+
+app = Flask(__name__)
+
+@app.route('/index')
+def home():
+    return render_template('index.html')
+
+
+@app.route('/results', methods=['POST'])
+def search_results():
+    query = request.form.get('query')
+    if not query:
+        return redirect(url_for('home'))
+
+    # Call search_psalms directly
+    index_results = search_psalms(query)
+
+    # Debug statement
+    #print(f"Top Results: {index_results}")
+
+    # Grabing the doc bnd psalm num serparately for the graph. 
+    psalms = [(entry["doc"], entry["psalm_num"]) for entry in index_results]
+
+    # retrieving the targeted psalms
+    full_results = retrieve_psalms(index_results)
+
+    # Debug Statement
+    # print(f"Psalms Text (after retrieve_psalms): {full_results}")
+    # print("=" * 40)
+    if full_results:
+        graph = graph_pca(query, psalms)
+        return render_template('results.html', query=query, results=full_results, viual=graph)
+    
+    return render_template('no_results.html', query=query)
+
+
+if __name__ == '__main__':                                                                          
+    app.run(debug=True)

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/results.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/search_bar.css') }}">
+    <title>St. David's Beacon</title>
+</head>
+
+<div class="header">
+    <center>
+        <div class="top">
+            <a href="/index">
+                <h1> Saint David's Beacon</h1>
+            </a>
+            <form action="/results" method='post' class="search-bar_container">
+                <input type="text" name='query' value="{{query}}">
+                <input type="submit" value="Search">
+            </form>
+            <div class="tools">
+                <div class="btn">
+                    <a href="#search-visual" class="open-modal" id="visualize-btn">Visualize My Search</a>
+                    <!-- Modal Structure -->
+                    <div class="modal" id="search-visual">
+                        <div class="graph-modal full_result">
+                            <div class="decor">
+                                <span class="close" onclick="closeModal('search-visual')">&times;</span>
+                                <h2>The Visual Representation of the Query</h2>
+                                <h3 style="color: red;">"<em>{{query}}</em>"</h3>
+                                <hr>
+                                <div class="visual-content content">
+                                    <h4>Understanding the Graph</h4>
+                                    <p>The graphs below represent the TF_IDF Matrix after it has been transformed by
+                                        Principal Component Analysis. Each point on the graph represents a single Psalms
+                                        from either the Bible (blue) or the Psalter (red). The highlights points
+                                        indicate the top 5 results for a specific query. Each document is plotted
+                                        according to its PC1 and PC2 scores. </p>
+                                    <center><img src="data:image/png;base64,{{ visual }}" alt="Graph"></center>
+                                    <h4>Defining PCA</h4>
+                                    <p>
+                                        <strong>Principal Component Analysis (PCA)</strong> simplifies large datasets
+                                        for easier analysis. PCA retains essential data while reducing redundancy.
+                                    </p>
+                                    <p>
+                                        <strong>The First Principal Component (PC1)</strong> is the direction along
+                                        which the data has the highest variance. It represents the most significant
+                                        relationship between the
+                                        features in the Psalms.
+                                    </p>
+                                    <p>
+                                        <strong>The Second Principal Component (PC2)</strong> is the direction
+                                        orthogonal (perpendicular)
+                                        to PC1 and represents the second-highest variance. It captures the second-most
+                                        important relationship between the Psalms.
+                                    </p>
+                                    <h4>Results</h4>
+                                    <p>
+                                        The graphs visually highlight key differences in word choice and semantics,
+                                        illustrating the distinction between the Book of Psalms and the Psalter. Psalms
+                                        from the Psalter appear more widely dispersed, indicating greater variation
+                                        compared to those from the Bible. Since both texts originate from the Greek
+                                        Septuagint, this suggests that translation choices played a significant role in
+                                        shaping their differences. 
+                                    </p>
+                                    <p>
+                                        The primary cause of this variation lies in the Psalter liturgical function. Its
+                                        translation prioritizes preserving the exact wording of the Greek Septuagint to
+                                        maintain the tradition of the Faith. This is evident in Figure 1, where a query
+                                        taken directly from the Divine Liturgy yields top results exclusively from the
+                                        Psalter. This consistency reflects the need to adhere closely to the received
+                                        tradition, minimizing deviation from the Faith passed down through Christ.
+                                    </p>
+                                    <center><img src="data:image/png;base64,{{ visual }}" alt="Graph"></center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-selector">
+                    <select id="searchDropdown" onchange="updateDropdownLabel(this)">
+                        <option value="all">All Results</option>
+                        <option value="bible">Bible</option>
+                        <option value="psalter">Psalter</option>
+                    </select>
+                </div>
+
+                <div class="metric-toggle">
+                    <label class="switch-label">
+                        See Similarity Percentage
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </center>
+</div>
+
+<hr class="main-hr">
+</center>
+</div>
+
+<body>
+
+    {% if results %}
+    <div>
+        <ul>
+            {% for result in results %}
+            <!-- {{result.doc}} {{result.psalm_num}}-->
+
+            <div class="{{result.doc.lower()}}">
+                <a href="#modal-{{result.doc}}-{{ result.psalm_num }}">
+                    <div class="results-container full">
+                        <h2>Psalm {{result.psalm_num}}</h2>
+                        <!-- Printing either the Bible or the Psalter -->
+                        {% if result.doc == "Bible" %}
+                        <h3>The Orthodox Study Bible</h3>
+                        {% else %}
+                        <h3>The Psalter According to the Seventy</h3>
+                        {% endif %}
+                        <!-- Only showing the fist part of the psalm -->
+                        <p class="psalm_text">{{ result.psalm[:250] }}...</p>
+                        <div class="metric">
+                            <h5>Similarity: {{result.similarity}}%</h5>
+                        </div>
+                    </div>
+                </a>
+                <!-- Modal Structure -->
+                <div class="modal" id="modal-{{result.doc}}-{{ result.psalm_num }}">
+                    <div class="full_result">
+                        <div class="psalm-decor">
+                            <span class="close"
+                                onclick="closeModal('{{ result.doc }}', '{{ result.psalm_num }}')">&times;</span>
+                            <h2> Psalm {{result.psalm_num}}</h2>
+                            {% if result.doc == "Bible" %}
+                            <!--Displaying the Bible Psalm-->
+                            <h3>The Orthodox Study Bible</h3>
+                            <hr style="width: 95%; padding-bottom: 0; margin-bottom: 0;">
+                            <div class="content">
+                                <!-- Only showing the fist part of the psalm -->
+                                <div class="psalm_text">{{ result.psalm}}.</div>
+                            </div>
+                            {% else %}
+                            <!--Displaying the Psalter Psalm-->
+                            <h3>The Psalter According to the Seventy</h3>
+                            <hr style="width: 95%; padding-bottom: 0; margin-bottom: 0;">
+                            <div class="content">
+                                <!-- Only showing the fist part of the psalm -->
+                                <div class="psalm_text">
+                                    {{ result.psalm }}
+                                </div>
+
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No results found.</p>
+        {% endif %}
+
+        <center>
+            <button><a href="/index"> Search Again</a></button>
+
+        </center>
+    </div>
+    <script>
+        // Open the Modal when the link is clicked
+        document.querySelectorAll('.open-modal').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent default anchor behavior (scrolling)
+                const modalId = link.getAttribute('href').substring(1); // Get modal ID from href (without '#')
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'block'; // Show the modal
+                }
+            });
+        });
+
+        // Unified modal open function
+        function openModal(modalIdentifier, psalmNum = null) {
+            let modalId = psalmNum ? `modal-${modalIdentifier}-${psalmNum}` : modalIdentifier;
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+
+        // Unified modal close function
+        function closeModal(modalIdentifier, psalmNum = null) {
+            let modalId = psalmNum ? `modal-${modalIdentifier}-${psalmNum}` : modalIdentifier;
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener("click", function (event) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+        });
+        // Close modal when clicking outside of it
+        window.onclick = function (event) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+        };
+
+        // When the document is ready, set up event listeners for the modal
+        document.addEventListener("DOMContentLoaded", function () {  // Fixed here
+            // Get all modal links
+            const modalLinks = document.querySelectorAll('a[href^="#modal-"]');
+            // Loop through all modal links
+            modalLinks.forEach(link => {
+                // Add click event listener to each modal link
+                link.addEventListener("click", function (event) {
+                    // Prevent default link behavior
+                    event.preventDefault();
+                    // Get the modal ID from the href attribute
+                    const modalId = this.getAttribute("href");
+                    // Show the modal
+                    const modal = document.querySelector(modalId);
+                    modal.style.display = "block";
+                });
+            });
+
+            // Close modal when clicking outside of the modal content
+            window.addEventListener("click", function (event) {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (event.target === modal) {
+                        modal.style.display = "none";
+                    }
+                });
+            });
+        });
+        // Drop down menu
+        function updateDropdownLabel(select) {
+            const value = select.value;
+            const bibleElements = document.querySelectorAll('.bible');
+            const psalterElements = document.querySelectorAll('.psalter');
+
+            bibleElements.forEach(el => el.style.display = (value === "bible" || value === "all") ? "block" : "none");
+            psalterElements.forEach(el => el.style.display = (value === "psalter" || value === "all") ? "block" : "none");
+        }
+
+        // Optional: update label on page load
+        document.addEventListener("DOMContentLoaded", function () {
+            updateDropdownLabel(document.getElementById("searchDropdown"));
+        });
+
+
+
+        // Turning on and off the cosine similarity metric 
+        // Done by the user. 
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.querySelector(".switch input");
+            const similarityMetrics = document.querySelectorAll(".metric");
+
+            function toggleMetrics() {
+                similarityMetrics.forEach(metric => {
+                    metric.style.display = toggleSwitch.checked ? "block" : "none";
+                });
+            }
+
+            toggleSwitch.addEventListener("change", toggleMetrics);
+            toggleMetrics(); // Ensure it applies the state on page load
+        });
+    </script>
+
+</body>
+
+</html>

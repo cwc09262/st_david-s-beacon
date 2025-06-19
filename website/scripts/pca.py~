@@ -1,0 +1,25 @@
+import pickle
+import os
+from sklearn.decomposition import PCA
+
+
+#Printning the current working directory
+print(f"Current Working Directory: {os.getcwd()}")
+
+
+# Define the directory where pickled files are stored
+load_dir = "../../Data/pickles"
+
+# Load the pickled TF-IDF matrix (optional, if you need to load the transformed matrix)
+matrix_path = os.path.join(load_dir, "psalms_tfidf_matrix.pickle")
+with open(matrix_path, "rb") as file:
+    tfidf_model = pickle.load(file)
+
+
+# Fit PCA
+pca = PCA(n_components=2)
+reduced_matrix = pca.fit_transform(tfidf_model)
+
+# Save PCA model
+with open("pca_model.pkl", "wb") as f:
+    pickle.dump(pca, f)

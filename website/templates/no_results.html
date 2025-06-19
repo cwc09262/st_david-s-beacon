@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/results.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/search_bar.css') }}">
+    <script type="text/javascript" async src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <title>St. David's Beacon</title>
+</head>
+    <div class="header">
+        <center>
+            <div class="top">
+                <a href="/index">
+                    <h1> Saint David's Beacon</h1>
+                </a>
+                <form action="/results" method='post' class="search-bar_container">
+                    <input type="text" name='query' value="{{query}}">
+                    <input type="submit" value="Search">
+                </form>
+            </div>
+        </center>
+    </div>
+    <div class="results-container">
+        <h2>Search Results for: "{{ query }}"</h2>
+        <h3>No Relevant Results Found</h3>
+        <p>Unfortunately, we couldn't find any Psalms closely matching your query. This may be because:</p>
+        <ul>
+            <li>The wording of your search is too different from the text of the Psalms.</li>
+            <li>The search terms are too broad or too specific.</li>
+            <li>The similarity score was below the relevance threshold.</li>
+            <ul>
+                <li>To learn more about the similarity score, please click <a
+                        style="color: blue; text-decoration: underline;" href="#tfidf_explain">here</a>.</li>
+            </ul>
+        </ul>
+        <p>Try refining your search by using different keywords, rephrasing your query, or simplifying the terms.</p>
+    </div>
+<body>
+    <!-- Explaining TF-IDF -->
+    <div class="modal" id="tfidf_explain">
+        <div class="full_result" style="width: 85%;">
+            <div class="decor">
+                <span class="close" onclick='closeModal("tfidf_explain")'>&times;</span>
+                <h2>Understanding the Similarity Score</h2>
+                <hr style="width: 95%; padding-bottom: 0; margin-bottom: 0;">
+                <div class="content">
+                    <p><strong>Term Frequency - Inverse Document Frequency(TF-IDF)</strong> represents two different
+                        calculations that, when combined, result in a score for each word in a given document within a
+                        set of documents. The entire calculation is composed of the following:
+
+                        $$
+                        TF-IDF = Term\ Frequency\ (tf) * Inverse\ Document\ Frequency\ (idf)
+                        $$
+                    </p>
+                    <h4>Terminology</h4>
+                    <p>Before beginning, we should note some terminology. Here are some of the most common terms and
+                        variables used within this project:</p>
+                    <ul>
+                        <li><strong>t</strong> - The targeted word within a document</li>
+                        <li><strong>d</strong> - A document or a set of words.</li>
+                        <li><strong>N</strong> - The number of documents in the corpus.</li>
+                        <li><strong>corpus</strong> - The collection of all documents.</li>
+                    </ul>
+                    <h3>Term Frequency (TF)</h3>
+                    <p>This measures the occurrence of a word within a document. The equation to calculate this is:</p>
+
+                    $$
+                    TF(t, d) = \frac{\text{Count of term } t \text{ in document } d}{\text{Total number of words in } d}
+                    $$
+                    <p>This measures how often a term \( t \) appears in a document \( d \), normalized by the document
+                        document.</p>
+
+                    <h3>Inverse Document Frequency (IDF)</h3>
+                    <p>The inverse document frequency represents how informative a word is within the document
+                        collection.</p>
+
+                    <p>IDF measures how important a term is across a collection of documents. It is calculated as:</p>
+
+                    $$
+                    IDF(t) = \log \left( \frac{N}{DF(t)} \right)
+                    $$
+
+                    <h4>where:</h4>
+                    <ul>
+                        <li><strong>N</strong> - The total number of documents in the collection.</li>
+                        <li><strong>DF(t)</strong> - The number of documents that contain the term \( t \).</li>
+                    </ul>
+
+                    <h3>Example</h3>
+                    <p> To put this into context here is an example to walk through. Suppose we have a collection of 5
+                        documents:</p>
+
+                    <center>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Document</th>
+                                    <th>Content</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>D1</td>
+                                    <td>The cat sat on the mat.</td>
+                                </tr>
+                                <tr>
+                                    <td>D2</td>
+                                    <td>The dog barked at the cat.</td>
+                                </tr>
+                                <tr>
+                                    <td>D3</td>
+                                    <td>A cat chased a mouse.</td>
+                                </tr>
+                                <tr>
+                                    <td>D4</td>
+                                    <td>Dogs and cats are common pets.</td>
+                                </tr>
+                                <tr>
+                                    <td>D5</td>
+                                    <td>The sun is bright today.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </center>
+
+
+
+
+                    <ul>
+                        <li>The term "<strong>cat</strong>" appears in <strong>4</strong> documents (D1, D2, D3, D4).
+                        </li>
+                        <li>Total number of documents \( N = 5 \).</li>
+                        <li>Document frequency \( TF(\textbf{"cat"}) = 4 \).</li>
+                    </ul>
+                    <p>Now, let's calculate \(TF\) and \( IDF \) for the term "<strong>cat</strong>":</p>
+                    <p>Calculating TF: </p>
+                    \[TF(\textbf{"cat"}) = 4\]
+
+                    <p>Calculating IDF:</p>
+                    <p>
+                        \[
+                        IDF(\textbf{"cat"}) = \log \left( \frac{5}{4} \right) = \log(1.25) \approx 0.096910013
+                        \]
+                    </p>
+
+                    <p>Calculating TF-IDF for the term <strong>cat</strong>:</p>
+                    <p>
+                        \[
+                        TF(\textbf{"cat"}) \times IDF(\textbf{"cat"}) = 4 \times \log \left(\frac{5}{4} \right)
+                        \]
+                    </p>
+
+                    <p>
+                        \[
+                        TF(\textbf{"cat"}) \times IDF(\textbf{"cat"}) = 4 \times 0.096910013
+                        \]
+                    </p>
+                    <p>
+                        \[= 0.387640052\]
+                    </p>
+
+                    <p>
+                        Since "cat" appears in most documents, its IDF is low, meaning it is not very informative. In
+                        contrast, a rarer word (e.g., "sun," which appears in only one document) would have a higher
+                        IDF,
+                        making it more significant for identifying that document.
+                    </p>
+
+                    <p>This calulation is preformed on every unqiue word in all of the documents and is part of a big
+                        TF-IDF matrix. Below is a sample of the matrix built from the psalms for this project. </p> <br>
+
+                    <center>
+                        <div class="table-container">
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>Document</th>
+                                        <th>anger</th>
+                                        <th>angry</th>
+                                        <th>anointed</th>
+                                        <th>art</th>
+                                        <th>ask</th>
+                                        <th>asunder</th>
+                                        <th>away</th>
+                                        <th>band</th>
+                                        <th>begotten</th>
+                                        <th>blessed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>(Bible, 1)</td>
+                                        <td>0.000000</td>
+                                        <td>0.000000</td>
+                                        <td>0.000000</td>
+                                        <td>0.000000</td>
+                                        <td>0.000000</td>
+                                        <td>0.000000</td>
+                                        <td>0.000000</td>
+                                        <td>0.000000</td>
+                                        <td>0.000000</td>
+                                        <td>0.069688</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(Bible, 2)</td>
+                                        <td>0.110275</td>
+                                        <td>0.083867</td>
+                                        <td>0.110275</td>
+                                        <td>0.000000</td>
+                                        <td>0.083867</td>
+                                        <td>0.000000</td>
+                                        <td>0.083867</td>
+                                        <td>0.083867</td>
+                                        <td>0.083867</td>
+                                        <td>0.065130</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(Psalter, 2)</td>
+                                        <td>0.000000</td>
+                                        <td>0.069551</td>
+                                        <td>0.000000</td>
+                                        <td>0.091451</td>
+                                        <td>0.069551</td>
+                                        <td>0.091451</td>
+                                        <td>0.069551</td>
+                                        <td>0.069551</td>
+                                        <td>0.069551</td>
+                                        <td>0.054013</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </center>
+                    <br>
+                    <h3>Cosine Similarity</h3>
+                    <p>
+                        Cosine similarity measures the similarity between two text vectors by calculating the cosine of
+                        the
+                        angle between them in a multi-dimensional space. It is commonly used in TF-IDF to compare query
+                        vectors with document vectors and find the most relevant matches.
+
+                    </p>
+                    Within the textbook, <em>Speech and Language Processing</em>, an equating for computing this cosine
+                    similarity:
+                    $$
+                    sim(\vec{q_k},\vec{d_j}) = \vec{q_k}\cdot \vec{d_j} = \sum_{i=1}^N w_{i,k} \times w_{i,j}
+                    $$
+                    <h4>Where:</h4>
+                    <ul>
+                        <li>\( \vec{q_k}\) is a specific query's vector</li>
+                        <li>\(\vec{d_j}\) is a specific document's vector</li>
+                        <li>\(w_{i,k}\) is the weight of term \(i\) in the query</li>
+                        <li>\(w_{i,j}\) is the wieght of term \(i\) in the document</li>
+                    </ul>
+
+                    <h3>Fully Normalized</h3>
+                    With all of that being said, we can come to a fianl cosine similarity equation, that takes into
+                    account the normalization that has been discussed.
+
+                    \[
+                    sim(\vec{q_k},\vec{d_j}) = \frac{\sum_{i=1}^N w_{i,k} \times w_{i,j}}{\sqrt{\sum_{i=1}^N w_{i,k}^2}
+                    \times \sqrt{\sum_{i=1}^N w_{i,j}^2}}
+                    \]
+
+                    <br> <br>
+                    <h3>Conclusions</h3>
+                    <p>
+                        In summary, the process of calculating cosine similarity, combined with the use of term weights
+                        and normalization, allows for more meaningful and accurate retrieval results. It effectively
+                        captures the semantic similarity between queries and documents, helping to rank the documents in
+                        order of relevance. However, in cases where there is little overlap in important terms or
+                        significant differences in document structure, the results may lack sufficient relevance or
+                        yield low similarity scores.
+                    </p>
+                    <br>
+                    <hr style="width: 95%; padding-bottom: 0; margin-bottom: 0;">
+
+                    <blockquote>
+                        <strong>Note:</strong>
+                        <em>All of the information above was taken from the following sources:</em>
+                        <blockquote>
+                            <li>
+                                <a style="color: blue; text-decoration: underline;"
+                                    href="https://medium.com/towards-data-science/tf-idf-for-document-ranking-from-scratch-in-python-on-real-world-dataset-796d339a4089"
+                                    target="_blank">
+                                    "TF-IDF from scratch in Python on a real-world dataset." - Medium
+                                </a>
+                            </li>
+                            <li><a style="color: blue; text-decoration: underline;"
+                                    href="https://github.com/yanshengjia/ml-road/blob/master/resources/Speech%20and%20Language%20Processing%20(3rd%20Edition).pdf"
+                                    target="_blank">
+                                    <em>Speech and Language Processing</em> (3rd Edition)
+                                </a>
+                            </li>
+                            <li><a style="color: blue; text-decoration: underline;"
+                                    href="https://www.capitalone.com/tech/machine-learning/understanding-tf-idf/"
+                                    target="_blank">
+                                    "Understanding TF-IDF for Machine Learning" - Capital One
+                                </a>
+                            </li>
+                        </blockquote>
+                    </blockquote>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <center>
+        <button><a href="/index"> Search Again</a></button>
+
+    </center>
+
+
+</body>
+<script>
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+    }
+
+    // Close modal when clicking outside of it
+    window.onclick = function (event) {
+        document.querySelectorAll('.modal').forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get all modal links
+        const modalLinks = document.querySelectorAll('a[href^="#"]');
+
+        modalLinks.forEach(link => {
+            link.addEventListener("click", function (event) {
+                event.preventDefault();
+                const modalId = this.getAttribute("href").substring(1); // Remove '#'
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = "block";
+                }
+            });
+        });
+
+        // Close modal when clicking outside of the modal content
+        window.addEventListener("click", function (event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+        });
+    });
+
+</script>
+
+</html>

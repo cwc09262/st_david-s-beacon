@@ -1,0 +1,19 @@
+body {
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding-top: 10%;
+   
+}
+
+@media (min-width: 768px){
+    body {
+        float: center;
+        max-width: 1400px;
+        margin: 0 auto;
+    }        
+}
+
+img {
+    height: 250px;
+}
