@@ -37,6 +37,22 @@ While traditional Bible tools are excellent at identifying direct quotations, th
 
 In doing so, I hope to shed light on the enduring spiritual legacy of these sacred songs.
 
----
+
+## Using St. David's Beacon
+
+Just like Google, this tool can be used to find Psalms related to references in relation to major themes or questions in the Christian faith, such as suffering, praise, or divine justice. The main things to search should be common themes withing the Church or quotes from the Divine Liturgy. Below are some of the queries that I have found to give great results. 
+
+- "*For the Peace of the world*"
+- "*love*"
+- "*guide*"
+- "*For the abundance of the fruit of the Earth*" 
+
+I want to also want you make you aware that not every search will produce results, and that is ok. There is some provided information on more ways to refine a search. I tried my best to make understandable for everyone. With all this being said i invite you to explore it for yourself and try to find results intriguing to you. Please reach out with any findings or questions you may have. I would love to talk and meet you if i do not already know you. 
+
+
 
 *“Let everything that has breath praise the Lord.”* – Psalm 150:6
+
+---
+
+<center> Procced to <a href="http://ec2-44-211-167-108.compute-1.amazonaws.com/index">St. Davids Beacon</a>
