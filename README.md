@@ -51,8 +51,10 @@ I want to also want you make you aware that not every search will produce result
 
 
 
-*“Let everything that has breath praise the Lord.”* – Psalm 150:6
+<div align="center">
+  ---
+  
+  *“Let everything that has breath praise the Lord.”* – Psalm 150:6
 
----
-
-<center> Procced to <a href="http://ec2-44-211-167-108.compute-1.amazonaws.com/index">St. Davids Beacon</a></center>
+  Procced to <a href="http://ec2-44-211-167-108.compute-1.amazonaws.com/index">St. Davids Beacon</a> 
+</div>
