@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  Image source: <a href="https://itoldya420.getarchive.net/amp/media/david-icon-dac18d">Flickr</a>
+ <a href="https://itoldya420.getarchive.net/amp/media/david-icon-dac18d">Image Source</a>
 </p>
 
 **Saint David’s Beacon** traces Psalms across texts, especially within the Orthodox Christian tradition. Named after the prophet St. David, the project uses technology to illuminate the Psalms’ spiritual significance and deepen understanding.
