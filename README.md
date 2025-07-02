@@ -55,4 +55,4 @@ I want to also want you make you aware that not every search will produce result
 
 ---
 
-<center> Procced to <a href="http://ec2-44-211-167-108.compute-1.amazonaws.com/index">St. Davids Beacon</a>
+<center> Procced to <a href="http://ec2-44-211-167-108.compute-1.amazonaws.com/index">St. Davids Beacon</a></center>
