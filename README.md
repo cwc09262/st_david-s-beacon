@@ -1,4 +1,4 @@
-# Saint David’s Beacon
+# Saint David’s Beacon - *An Introduction*
 
 <p align="center">
   <img src="https://cdn2.picryl.com/photo/2022/01/03/david-icon-dac18d-small.jpg" alt="Icon of St. David, the Holy Prophet and King" width="300">
@@ -16,7 +16,7 @@ The Bible frequently references itself in countless ways, yet no definitive cata
 
 > “The poetic structure of Byzantine hymnology is an organic blending of Jewish and Greek artistic forms. The Psalms  . . . contributed to a common store of images and rhetorical means.”
 
-Inspired by this insight, I have developed a search engine that traces references to the Psalms across Christian texts — not only through exact quotations, but also thematic resonances.
+Inspired by this insight, I have developed a search engine that traces references to the Psalms across Christian texts and thought — not only through exact quotations, but also thematic resonances.
 
  Within the past few years, I have been drawn towards the beauty of the book of Psalms. I have also been trying to find a project that incorporates my computer science background with the Orthodox Church in some way. After taking a Machine Learning class, I was able to further understand and see the capability of ML and more specifically start to discover and learn about **Natural Language Processing**. Motivated by a desire to explore the beauty of the Psalms and inspired by my recent discovery of Natural Language Processing, I set out to build a search engine capable of tracing the Psalms across Orthodox texts—bringing together my spiritual interests and technical skills.
  
