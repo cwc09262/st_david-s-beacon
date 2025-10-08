@@ -48,6 +48,9 @@ I want to also want you make you aware that not every search will produce result
 
 *“Let everything that has breath praise the Lord.”* – Psalm 150:6
 
----
-
-<center> Proceed to <a href="http://ec2-44-211-167-108.compute-1.amazonaws.com/index">St. Davids Beacon</a></center>
+---<center>
+  <p style="color: red; font-weight: bold; margin-bottom: 10px;">
+    * The site is not currently running due to ongoing research and development.
+  </p>
+  Proceed to <a href="http://ec2-44-211-167-108.compute-1.amazonaws.com/index">St. David’s Beacon</a>
+</center>
