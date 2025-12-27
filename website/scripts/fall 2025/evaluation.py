@@ -1,8 +1,50 @@
 import pandas as pd
 import random
 
-INPUT_CSV = "results.csv"
+INPUT_CSV = "full_results.csv"
 OUTPUT_CSV = "results_scored.csv"
+
+
+# Columns that define uniqueness
+UNIQUE_COLS = ["Query", "Method", "Similarity Score (%)", "Text", "Psalm Num", "Verse"]
+
+def add_new_results():
+    """
+    Merge new rows from INPUT_CSV into OUTPUT_CSV
+    without overwriting existing HumanScore values,
+    using the combination of UNIQUE_COLS as identity.
+    """
+    input_df = pd.read_csv(INPUT_CSV)
+    if "HumanScore" not in input_df.columns:
+        input_df["HumanScore"] = pd.NA
+
+    try:
+        scored_df = pd.read_csv(OUTPUT_CSV)
+        print(f"Loaded existing scored file: {OUTPUT_CSV}")
+    except FileNotFoundError:
+        # First run — just save input
+        input_df.to_csv(OUTPUT_CSV, index=False)
+        print("Created new scored file.")
+        return
+
+    # Identify new rows by checking all UNIQUE_COLS
+    merged = scored_df.merge(
+        input_df,
+        on=UNIQUE_COLS,
+        how='right',
+        indicator=True
+    )
+
+    new_rows = merged[merged['_merge'] == 'right_only'].drop(columns=['_merge'])
+
+    if new_rows.empty:
+        print("No new results to add.")
+        return
+
+    # Append new rows
+    combined = pd.concat([scored_df, new_rows], ignore_index=True)
+    combined.to_csv(OUTPUT_CSV, index=False)
+    print(f"Added {len(new_rows)} new results for scoring.")
 
 def load_data():
     # try loading the scored file first
@@ -58,7 +100,9 @@ def get_score():
             return int(x)
         print("Invalid input — enter a number 0–10 or 'q' to quit.")
 
+    
 def main():
+    add_new_results()
     df = load_data()
     print("\nReady to evaluate!")
     print("Press 'q' to quit at any time.\n")
